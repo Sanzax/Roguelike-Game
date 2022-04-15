@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PathFindingUnit : MonoBehaviour
 {
-    [SerializeField] Rigidbody2D rb;
+    [SerializeField] Rigidbody rb;
     Vector3[] path;
     int targetIndex;
 
@@ -34,7 +34,7 @@ public class PathFindingUnit : MonoBehaviour
 
         while(true)
         {
-            if(rb.position == new Vector2(currentWaypoint.x, currentWaypoint.y))
+            if(rb.position == currentWaypoint)
             {
                 targetIndex++;
                 if(targetIndex >= path.Length)
@@ -43,10 +43,7 @@ public class PathFindingUnit : MonoBehaviour
                 }
                 currentWaypoint = path[targetIndex];
             }
-            Vector3 v3 = Vector3.MoveTowards(transform.position, currentWaypoint, Speed * Time.fixedDeltaTime);
-
-            rb.position = new Vector2(v3.x, v3.y);
-            //transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, Speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, Speed * Time.deltaTime);
             yield return null;
         }
     }

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 public class Projectile : MonoBehaviour, IPooledObject
 {
     [SerializeField]
-    protected Rigidbody2D rb;
+    protected Rigidbody rb;
 
     protected float moveSpeed;
     protected float damage;

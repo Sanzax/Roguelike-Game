@@ -14,11 +14,15 @@ public class PlayerInputs : MonoBehaviour
     public float HorizontalInput { get; private set; }
     public float VerticalInput { get; private set; }
 
-    public Vector3 MousePosition 
+    public float Angle 
     {
         get 
-        { 
-            return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        {
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = 5.23f;
+            Vector3 objectPos = Camera.main.WorldToScreenPoint(transform.position);
+            float angle = Mathf.Atan2(mousePos.y - objectPos.y, mousePos.x - objectPos.x) * Mathf.Rad2Deg;
+            return -angle;
         }
     }
 

@@ -19,13 +19,13 @@ public class AttackState_Test : IState
 
     public void Update()
     {
-        Machine.PathUnit.MoveTo(Machine.Player.transform.position);
+        //Machine.PathUnit.MoveTo(Machine.Player.transform.position);
         attackTimer += Time.deltaTime;
         if(attackTimer > Machine.Stats.GetShootDelay())
         {
             attackTimer = 0;
-            //ShootingPatterns.ShootTowardsTarget(machine.target, machine.shootPoint, Shoot, 3, 16f);
-            ShootingPatterns.ShootAround(Shoot, 4);
+            ShootingPatterns.ShootTowardsTarget(Machine.Target, Machine.ShootPoint, Shoot, 3, 16f);
+            //ShootingPatterns.ShootAround(Shoot, 4);
         }
     }
 
@@ -36,7 +36,7 @@ public class AttackState_Test : IState
 
     void Shoot(float angle)
     {
-        Quaternion rotation = Quaternion.Euler(0, 0, angle);
+        Quaternion rotation = Quaternion.Euler(0, angle, 0);
         GameObject projectileObj = ObjectPooler.Instance.SpawnFromPool(Machine.ProjectilePoolName, Machine.ShootPoint.position, rotation);
         Projectile projectile = projectileObj.GetComponent<Projectile>();
         projectile.Init(Machine.Stats.GetShotSpeed(), Machine.Stats.GetDamage());

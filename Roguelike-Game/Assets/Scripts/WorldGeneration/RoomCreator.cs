@@ -49,8 +49,8 @@ public class RoomCreator : MonoBehaviour
             {
                 RoomLayout roomLayout = RoomLayouts[x, y];
 
-                Vector3 offsetPosition = -new Vector3(  (worldGenerator.GridSizeX * roomTileWidth - roomTileWidth)/2, 
-                                                        (worldGenerator.GridSizeY * roomTileHeight - roomTileHeight) /2, 0);
+                Vector3 offsetPosition = -new Vector3(  (worldGenerator.GridSizeX * roomTileWidth - roomTileWidth)/2, 1,
+                                                        (worldGenerator.GridSizeY * roomTileHeight - roomTileHeight) /2);
 
                 if (roomLayout.RoomType != RoomType.empty)
                 {
@@ -72,7 +72,7 @@ public class RoomCreator : MonoBehaviour
                     else if (roomLayout.Up && roomLayout.Down && !roomLayout.Left && roomLayout.Right) roomPrefab = roomLists.roomsUDR[0];
                     else roomPrefab = roomLists.roomsULR[0];
 
-                    Vector3 roomPosition = new Vector3(x * roomTileWidth, y * roomTileHeight, 0);
+                    Vector3 roomPosition = new Vector3(x * roomTileWidth, 0, y * roomTileHeight);
 
                     GameObject roomObj = Instantiate(roomPrefab, roomPosition + offsetPosition, Quaternion.identity, transform);
                 }

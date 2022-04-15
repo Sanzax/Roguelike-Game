@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class EnemyProjectile : Projectile
 {
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(collision.transform.tag == "Player")
+        if (other.transform.tag == "Player")
         {
-            collision.gameObject.GetComponent<PlayerHP>().TakeDamage(damage);
+            other.gameObject.GetComponent<PlayerHP>().TakeDamage(damage);
         }
         gameObject.SetActive(false);
     }
+
 }

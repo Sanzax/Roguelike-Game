@@ -50,6 +50,7 @@ public class WorldGenerator : MonoBehaviour
     List<XY> deadEnds;
     Stack<XY> stack;
 
+    [SerializeField] bool displayGizmos;
 
 
     private void Start()
@@ -303,7 +304,7 @@ public class WorldGenerator : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if(Rooms != null)
+        if(Rooms != null && displayGizmos)
         {
             for (int x = 0; x < gridSizeX; x++)
             {
