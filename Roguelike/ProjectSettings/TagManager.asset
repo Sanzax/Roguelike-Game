@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - PlayerProjectile
+  - EnemyProjectile
+  - CameraBoundaries
+  - CameraHorizontalBound
+  - CameraVerticalBound
   layers:
   - Default
   - TransparentFX
@@ -11,13 +16,13 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - PlayerProjectiles
+  - EnemyProjectiles
+  - Wall
+  - Gap
+  - Minimap
   - 
   - 
   - 
