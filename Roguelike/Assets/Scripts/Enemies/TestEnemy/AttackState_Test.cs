@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AttackState_Test : IState
 {
     public EnemyStateMachine Machine { get; set; }
-    float attackTimer = 0f;
 
     public AttackState_Test(EnemyStateMachine m)
     {
@@ -14,19 +11,13 @@ public class AttackState_Test : IState
 
     public void Start()
     {
-
+        Debug.Log("Hyökkäys tila");
     }
 
     public void Update()
     {
-        //Machine.PathUnit.MoveTo(Machine.Player.transform.position);
-        attackTimer += Time.deltaTime;
-        if(attackTimer > Machine.Stats.GetShootDelay())
-        {
-            attackTimer = 0;
-            ShootingPatterns.ShootTowardsTarget(Machine.Target, Machine.ShootPoint, Shoot, 3, 16f);
-            //ShootingPatterns.ShootAround(Shoot, 4);
-        }
+        Machine.KeepDistanceFromPlayer();
+        KeepAttacking();
     }
 
     public void FixedUpdate()
@@ -34,12 +25,13 @@ public class AttackState_Test : IState
 
     }
 
-    void Shoot(float angle)
+    void KeepAttacking()
     {
-        Quaternion rotation = Quaternion.Euler(0, angle, 0);
-        GameObject projectileObj = ObjectPooler.Instance.SpawnFromPool(Machine.ProjectilePoolName, Machine.ShootPoint.position, rotation);
-        Projectile projectile = projectileObj.GetComponent<Projectile>();
-        projectile.Init(Machine.Stats.GetShotSpeed(), Machine.Stats.GetDamage());
+        if(Machine.CanAttack())
+        {
+            Machine.AttackTimer = 0;
+            ShootingPatterns.ShootTowardsTarget(Machine.Target, Machine.transform, Machine.Shoot, 3, 16);
+        }
     }
 
 

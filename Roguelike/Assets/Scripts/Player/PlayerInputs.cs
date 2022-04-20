@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerInputs : MonoBehaviour
 {
@@ -14,6 +12,8 @@ public class PlayerInputs : MonoBehaviour
     public float HorizontalInput { get; private set; }
     public float VerticalInput { get; private set; }
 
+    public bool InputsEnabled { get; set; }
+
     public float Angle 
     {
         get 
@@ -26,10 +26,24 @@ public class PlayerInputs : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        InputsEnabled = true;
+    }
+
     void Update()
     {
-        ReceiveAxisInput();
-        ReceiveButtonInputs();
+        if(InputsEnabled)
+        {
+            ReceiveAxisInput();
+            ReceiveButtonInputs();
+        }
+        else
+        {
+            IsShooting = false;
+            HorizontalInput = 0f;
+            VerticalInput = 0f;
+        }
     }
 
     void ReceiveAxisInput()

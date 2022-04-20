@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -23,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Rotate()
     {
-        rb.rotation = Quaternion.Euler(new Vector3(0, playerInputs.Angle, 0));
+        if(playerInputs.InputsEnabled)
+            rb.rotation = Quaternion.Euler(new Vector3(0, playerInputs.Angle, 0));
     }
 }

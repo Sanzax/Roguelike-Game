@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PathGrid : MonoBehaviour
@@ -16,7 +14,7 @@ public class PathGrid : MonoBehaviour
     [SerializeField] float unitRadius;
     
 
-    private void Awake()
+    private void Start()
     {
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
@@ -32,7 +30,7 @@ public class PathGrid : MonoBehaviour
         }
     }
 
-    private void CreateGrid()
+    public void CreateGrid()
     {
         grid = new PathNode[gridSizeX, gridSizeY];
         Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y/2;
@@ -72,6 +70,7 @@ public class PathGrid : MonoBehaviour
 
     public PathNode NodeFromWorldPosition(Vector3 worldPosition)
     {
+        worldPosition -= transform.position;
         float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
         float percentY = (worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y;
         percentX = Mathf.Clamp01(percentX);

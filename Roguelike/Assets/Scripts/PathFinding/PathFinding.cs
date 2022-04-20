@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class PathFinding : MonoBehaviour
 {
@@ -23,8 +22,6 @@ public class PathFinding : MonoBehaviour
         PathNode startNode = grid.NodeFromWorldPosition(startPosition);
         PathNode targetNode = grid.NodeFromWorldPosition(targetPosition);
 
-        if (startNode.walkable && targetNode.walkable)
-        {
             Heap<PathNode> openSet = new Heap<PathNode>(grid.MaxSize);
             HashSet<PathNode> closedSet = new HashSet<PathNode>();
             openSet.Add(startNode);
@@ -66,7 +63,6 @@ public class PathFinding : MonoBehaviour
                     }
                 }
             }
-        }
         yield return null;
         if(pathSucces)
         {
@@ -121,5 +117,10 @@ public class PathFinding : MonoBehaviour
         if (dstX > dstY)
             return 14 * dstY + 10 * (dstX - dstY);
         return 14 * dstX + 10 * (dstY - dstX);
+    }
+
+    public void SetGrid(PathGrid newGrid)
+    {
+        grid = newGrid;
     }
 }

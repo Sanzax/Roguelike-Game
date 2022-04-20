@@ -1,58 +1,43 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] Vector2 offset;
     bool verticalBoundary, horizontalBoundary;
 
-    Transform cameraParent;
+    public Transform CameraParent { get; private set; }
+
+    float xMin, xMax, yMin, yMax;
+
+    public bool Follow { get; set; }
 
     private void Awake()
     {
-        cameraParent = Camera.main.transform.parent;
+        Follow = true;
+        CameraParent = Camera.main.transform.parent.parent;
+        xMin = -20;
+        xMax = 20;
+        yMin = -20;
+        yMax = 20;
     }
 
-    void Update()
+    void LateUpdate()
     {
-        if (!verticalBoundary)
-            FollowZ();
-        if (!horizontalBoundary)
-            FollowX();
-    }
-
-    void FollowX()
-    {
-        cameraParent.position = new Vector3(transform.position.x + offset.x, cameraParent.position.y, cameraParent.position.z);
-    }
-
-    void FollowZ()
-    {
-        cameraParent.position = new Vector3(cameraParent.position.x, cameraParent.position.y, transform.position.z + offset.y);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "CameraVerticalBound")
+        if(Follow)
         {
-            verticalBoundary = true;
+            CameraParent.position = new Vector3(
+                Mathf.Clamp(transform.position.x, xMin, xMax),
+                CameraParent.position.y,
+                Mathf.Clamp(transform.position.z, yMin, yMax));
         }
-        if (other.tag == "CameraHorizontalBound")
-        {
-            horizontalBoundary = true;
-        }
+
     }
 
-    private void OnTriggerExit(Collider other)
+
+    public void SetBounds(float XMin, float XMax, float YMin, float YMax)
     {
-        if (other.tag == "CameraVerticalBound")
-        {
-            verticalBoundary = false;
-        }
-        if (other.tag == "CameraHorizontalBound")
-        {
-            horizontalBoundary = false;
-        }
+        xMin = XMin;
+        xMax = XMax;
+        yMin = YMin;
+        yMax = YMax;
     }
 }

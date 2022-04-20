@@ -1,19 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
 public struct RoomLayout
 {
-    public RoomType RoomType { get; set; }
-    public bool Up { get; set; }
-    public bool Down { get; set; }
-    public bool Left { get; set; }
-    public bool Right { get; set; }
+    public RoomType RoomType { get; private set; }
+    public int  GridId { get; private set; }
+    public bool Up { get; private set; }
+    public bool Down { get; private set; }
+    public bool Left { get; private set; }
+    public bool Right { get; private set; }
 
-    public RoomLayout(RoomType type, bool up, bool down, bool left, bool right)
+    public RoomLayout(RoomType type, int gridId, bool up, bool down, bool left, bool right)
     {
         RoomType = type;
+        GridId = gridId;
         Up = up;
         Down = down;
         Left = left;
@@ -25,17 +26,22 @@ public struct RoomLayout
 public class RoomCreator : MonoBehaviour
 {
     [SerializeField] RoomLists roomLists;
-    int roomTileWidth = 18;
-    int roomTileHeight = 10;
+    [SerializeField] int roomTileWidth = 3;
+    [SerializeField] int  roomTileHeight = 3;
+    [SerializeField] int roomTileCountX = 40;
+    [SerializeField] int roomTileCountY = 30;
 
     WorldGenerator worldGenerator;
 
     RoomLayout[,] RoomLayouts;
 
+    GameObject player;
+
     // Start is called before the first frame update
     void Awake()
     {
         worldGenerator = GetComponent<WorldGenerator>();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     public void CreateRooms()
@@ -49,13 +55,14 @@ public class RoomCreator : MonoBehaviour
             {
                 RoomLayout roomLayout = RoomLayouts[x, y];
 
-                Vector3 offsetPosition = -new Vector3(  (worldGenerator.GridSizeX * roomTileWidth - roomTileWidth)/2, 1,
-                                                        (worldGenerator.GridSizeY * roomTileHeight - roomTileHeight) /2);
-
-                if (roomLayout.RoomType != RoomType.empty)
+                Vector3 offsetPosition = -new Vector3(  (worldGenerator.GridSizeX * roomTileWidth * roomTileCountX - roomTileWidth * roomTileCountX) /2, 1,
+                                                        (worldGenerator.GridSizeY * roomTileHeight * roomTileCountY - roomTileHeight * roomTileCountY) /2);
+                RoomType roomType = roomLayout.RoomType;
+                if (roomType != RoomType.empty)
                 {
                     GameObject roomPrefab;
 
+                    /*
                     if (roomLayout.Up && roomLayout.Down && roomLayout.Left && roomLayout.Right) roomPrefab = roomLists.roomsUDLR[0];
                     else if (!roomLayout.Up && roomLayout.Down && !roomLayout.Left && !roomLayout.Right) roomPrefab = roomLists.roomsD[0];
                     else if (!roomLayout.Up && !roomLayout.Down && roomLayout.Left && !roomLayout.Right) roomPrefab = roomLists.roomsL[0];
@@ -71,10 +78,30 @@ public class RoomCreator : MonoBehaviour
                     else if (roomLayout.Up && roomLayout.Down && roomLayout.Left && !roomLayout.Right) roomPrefab = roomLists.roomsUDL[0];
                     else if (roomLayout.Up && roomLayout.Down && !roomLayout.Left && roomLayout.Right) roomPrefab = roomLists.roomsUDR[0];
                     else roomPrefab = roomLists.roomsULR[0];
+                    */
+                    roomPrefab = roomLists.roomsULR[0];
 
-                    Vector3 roomPosition = new Vector3(x * roomTileWidth, 0, y * roomTileHeight);
-
+                    Vector3 roomPosition = new Vector3(x * roomTileWidth * roomTileCountX, 0, y * roomTileHeight * roomTileCountY);
                     GameObject roomObj = Instantiate(roomPrefab, roomPosition + offsetPosition, Quaternion.identity, transform);
+                    RoomBehaviour roomBehaviour = roomObj.GetComponent<RoomBehaviour>();
+                    roomBehaviour.GridId = roomLayout.GridId;
+
+                    //roomBehaviour.pathGrid.CreateGrid();
+
+                    if(roomType == RoomType.start)
+                    {
+                        player.GetComponent<RoomTransitioner>().CurrentRoom = roomBehaviour;
+                        player.GetComponent<CameraFollow>().SetBounds(roomBehaviour.xMin.position.x, 
+                                                                        roomBehaviour.xMax.position.x,
+                                                                        roomBehaviour.yMin.position.z, 
+                                                                        roomBehaviour.yMax.position.z);
+
+                        PathRequestManager.instance.SetGrid(roomBehaviour.pathGrid);
+                    }
+                    else
+                    {
+                        roomBehaviour.SetRoomActive(false);
+                    }
                 }
             }
         }
@@ -109,9 +136,10 @@ public class RoomCreator : MonoBehaviour
         RoomLayout roomLayout;
 
         RoomType roomType = (RoomType)worldGenerator.Rooms[x, y];
+        int gridId = x + y * worldGenerator.GridSizeX;
         if (roomType == RoomType.empty)
         {
-            return new RoomLayout(roomType, false, false, false, false);
+            return new RoomLayout(roomType, gridId, false, false, false, false);
         }
 
         bool up = false, down = false, right = false, left = false;
@@ -133,7 +161,7 @@ public class RoomCreator : MonoBehaviour
                 up = true;
         }
 
-        roomLayout = new RoomLayout(roomType, up, down, left, right);
+        roomLayout = new RoomLayout(roomType, gridId, up, down, left, right);
 
         return roomLayout;
     }

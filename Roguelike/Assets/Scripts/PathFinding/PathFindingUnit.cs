@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class PathFindingUnit : MonoBehaviour
@@ -10,10 +8,18 @@ public class PathFindingUnit : MonoBehaviour
     int targetIndex;
 
     public float Speed { get; set; }
+    public bool IsMoving { get; private set; }
 
     public void MoveTo(Vector3 targetPosition)
     {
-        PathRequestManager.RequestPath(transform.position, targetPosition, OnPathFound);
+        PathRequestManager.instance.RemoveAllRequestsFrom(this);
+        PathRequestManager.RequestPath(this, transform.position, targetPosition, OnPathFound);
+    }
+
+    public void Stop()
+    {
+        StopCoroutine("FollowPath");
+        IsMoving = false;
     }
 
     private void OnPathFound(Vector3[] newPath, bool pathSuccessful)
@@ -28,6 +34,7 @@ public class PathFindingUnit : MonoBehaviour
 
     IEnumerator FollowPath()
     {
+        IsMoving = true;
         if (path.Length == 0)
             yield break;
         Vector3 currentWaypoint = path[0];
@@ -39,11 +46,12 @@ public class PathFindingUnit : MonoBehaviour
                 targetIndex++;
                 if(targetIndex >= path.Length)
                 {
+                    IsMoving = false;
                     yield break;
                 }
                 currentWaypoint = path[targetIndex];
             }
-            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, Speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, Speed * Time.fixedDeltaTime);
             yield return null;
         }
     }

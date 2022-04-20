@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,7 +7,7 @@ public struct XY
     public int x;
     public int y;
 
-    public XY(int _x, int _y)
+    public XY(int _x, int _y) 
     {
         x = _x;
         y = _y;
@@ -31,16 +30,16 @@ public class WorldGenerator : MonoBehaviour
 
 	public int[,] Rooms { get; private set; }
 
-    [SerializeField] int gridSizeX, gridSizeY;
+    [SerializeField] int gridSizeX = 15, gridSizeY = 15;
     public int GridSizeX { get { return gridSizeX; } }
     public int GridSizeY { get { return gridSizeY; } }
 
-    [SerializeField] int maxRoomCount;
-    [SerializeField] int maxBranchSize;
-    [SerializeField] int minBranchSize;
-    [SerializeField] int maxMainBranchSize;
-    [SerializeField] int minMainBranchSize;
-    [SerializeField] float bracnhingProbability;
+    [SerializeField] int maxRoomCount = 15;
+    [SerializeField] int maxBranchSize = 2;
+    [SerializeField] int minBranchSize = 1;
+    [SerializeField] int maxMainBranchSize = 8;
+    [SerializeField] int minMainBranchSize = 6;
+    [SerializeField] float bracnhingProbability = 1.5f;
     int currentRoomCount;
 
     bool isBossRoomGenerated;
@@ -51,6 +50,7 @@ public class WorldGenerator : MonoBehaviour
     Stack<XY> stack;
 
     [SerializeField] bool displayGizmos;
+    [SerializeField] bool createRooms;
 
 
     private void Start()
@@ -66,8 +66,10 @@ public class WorldGenerator : MonoBehaviour
             }
         }*/
 
+
         GenerateMap();
-        roomCreator.CreateRooms();
+        if(createRooms)
+            roomCreator.CreateRooms();
     }
 
     private void Update()
@@ -75,7 +77,8 @@ public class WorldGenerator : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             GenerateMap();
-            roomCreator.CreateRooms();
+            if (createRooms)
+                roomCreator.CreateRooms();
         }
     }
 

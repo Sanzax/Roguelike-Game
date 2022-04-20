@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: TestBaseStats
   m_EditorClassIdentifier: 
   hp: 100
-  speed: 5
+  speed: 10
   damage: 1
   shootDelay: 1
   range: 5
-  shotSpeed: 5
+  shotSpeed: 30

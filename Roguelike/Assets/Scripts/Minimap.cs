@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Minimap : MonoBehaviour
 {
     [SerializeField] Camera minimapCamera;
 
-    public Room CurrentRoom { get; set; }
+    public RoomBehaviour CurrentRoom { get; set; }
 
     public void CenterMinimap(Vector3 position)
     {
